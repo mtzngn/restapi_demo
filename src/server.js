@@ -1,11 +1,11 @@
 require("./db/connection");
 const express = require("express");
 const {User} = require("./models/User");
+const {Blog} = require("./models/Blog");
 
 const port = process.env.PORT || 5000
 const app = express();
 app.use(express.json());
-
 
 //get all users
 app.get("/users", async (req, res) => {
@@ -14,8 +14,7 @@ try {
     res.status(200).send(allUsers);
 
 } catch (error) {
-    res.status(500).send(error);
-}
+    res.status(500).send(error);}
 });
 //route to add user to db
 app.post("/users", async (req, res) => {
@@ -27,7 +26,6 @@ app.post("/users", async (req, res) => {
         res.status(500).send({messages: "Could not connect"});
     }
 });
-
 //update user
 app.patch("/users/:id", async (req, res) => {
 try {
@@ -36,7 +34,7 @@ try {
     const updatedUser = await User.findOneAndUpdate(query, newUser)
     res.status(200).send({messgae: `user succesfully updated!`})
 } catch (error) {
-    res.status(500).send({message: "Couldn't update!"})
+    res.status(404).send({message: "Couldn't update!"})
 }
 });
 
@@ -50,9 +48,53 @@ app.delete("/users/:id", async (req, res) => {
     } catch (error) {
         res.status(500).send({message: "user could not be deleted"})
     }
-
-
 });
+
+
+
+
+
+
+//get all posts
+app.get("/blogs", async (req, res) => {
+    try {
+        const allBlogs = await Blog.find({});
+        res.status(200).send(allBlogs);
+    
+    } catch (error) {
+        res.status(500).send(error);}
+    });
+//route to add user to db
+app.post("/blogs", async (req, res) => {
+    try {
+        const blog = new Blog(req.body);
+        const savedBlog = await blog.save();
+        res.status(201).send(savedBlog);
+    } catch (error) {
+        res.status(500).send({messages: "Could not post the blog"});
+    }
+});
+//update user
+app.patch("/blogs/:id", async (req, res) => {
+try {
+
+    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    res.status(200).send({messgae: `blog updated: ${updatedBlog}`})
+} catch (error) {
+    res.status(404).send({message: "Couldn't find the blog!"})
+}
+});
+
+//delete user
+app.delete("/blogs/:id", async (req, res) => {
+    try {
+        const deletedBlog = await Blog.findByIdAndDelete(req.params.id)
+        res.status(200).send({message: `Blog with the title -${deletedBlog.title}- is succesfully deleted`})
+    } catch (error) {
+        res.status(500).send({message: "Could not find the blog!"})
+    }
+});
+    
 
 app.listen(port, () =>{
     console.log(`server is listening on port ${5000}`)
