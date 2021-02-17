@@ -11,7 +11,7 @@ exports.getAllBlogs = async (req, res) => {
 
 exports.getBlogsById =  async (req, res) => {
     try {
-        const allBlogs = await Blog.find({ author: req.params.user_id});
+        const allBlogs = await Blog.find({ author: req.user._id});
         res.status(200).send(allBlogs) 
     } catch (error) {
         res.status(500).send({message: "Couldnt match any blogs!"})
@@ -31,7 +31,7 @@ exports.createBlog =  async (req, res) => {
 exports.createBlogWithUserId = async (req, res) => {
     try {
         const blog = new Blog(req.body);
-        blog.author = req.params.user_id;
+        blog.author = req.user._id;
         const savedBlog = await blog.save();
         res.status(201).send(savedBlog);
     } catch (error) {
