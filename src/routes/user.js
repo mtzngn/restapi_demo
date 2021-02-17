@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const {getMyProfile, createUser, updateUserById, deleteUser, login, logout} = require("../controllers/user")
+const {  getMyProfile, createUser, updateUserById, deleteUser, login, logout} = require("../controllers/user")
 const userRouter = Router();
 const { hashPassword, auth } = require("../middleware/")
 //TEST
