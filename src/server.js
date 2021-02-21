@@ -12,7 +12,9 @@ app.use(express.json());
 app.use(userRouter)
 app.use(blogRouter)
 
-
+app.get("/health", (req, res) => {
+    res.status(200).send({ message: "API is working" });
+  });
 app.listen(port, () =>{
     console.log(`server is listening on port ${5000}`)
 });
